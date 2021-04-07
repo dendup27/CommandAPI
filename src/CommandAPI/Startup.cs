@@ -32,14 +32,11 @@ namespace CommandAPI
             var ddd = Configuration["UserID"];
 
             services.AddDbContext<CommandContext>(options => options.UseNpgsql(builder.ConnectionString));
-
             services.AddControllers().AddNewtonsoftJson(newtonsoftJson =>
             {
                 newtonsoftJson.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
-            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
         }
 
