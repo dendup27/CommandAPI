@@ -1,5 +1,5 @@
 trigger:
-- master
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -29,3 +29,4 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'publish artifacts'
+  
