@@ -1,5 +1,6 @@
 using System;
 using CommandAPI.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +33,18 @@ namespace CommandAPI
             var ddd = Configuration["UserID"];
 
             services.AddDbContext<CommandContext>(options => options.UseNpgsql(builder.ConnectionString));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+            {
+                opt.Audience = Configuration["ResourceId"];
+                opt.Authority = $"{Configuration["Instance"]}{Configuration["TenantId"]}";
+            });
+
             services.AddControllers().AddNewtonsoftJson(newtonsoftJson =>
             {
                 newtonsoftJson.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
         }
@@ -49,6 +58,9 @@ namespace CommandAPI
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
