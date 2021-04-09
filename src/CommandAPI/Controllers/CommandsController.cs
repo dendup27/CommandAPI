@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CommandAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Route("api/[controller]")]
     public class CommandsController : ControllerBase
     {
         private readonly ICommandAPIRepo _repository;
@@ -29,8 +28,7 @@ namespace CommandAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<CommandReadDto>>(commandItems));
         }
 
-        [Authorize]
-        [HttpGet("{id}", Name = "GetCommandById")]
+        [HttpGet("{id}", Name = "GetCommandById"), Authorize]
         public ActionResult<CommandReadDto> GetCommandById(int id)
         {
             var commandItem = _repository.GetCommandById(id);
